@@ -26,7 +26,7 @@ public class EmployeeService {
 
 
          //employee=request.getEmployee();
-        employee.setAddressList(addressList);
+       // employee.setAddressList(addressList);
 
         //return employeeRepository.save(employee);
         return employeeRepository.save(employee);
@@ -46,13 +46,21 @@ public class EmployeeService {
 
     }
 
-    public Employee updateEmployee(Employee employee){
-        Employee existigEmployee = employeeRepository.findById(employee.getId()).orElse(null);
+    public Employee updateEmployee(Integer id, Employee employee){
+        Employee existigEmployee = employeeRepository.findById(id).orElse(null);
+//        existigEmployee.setName(employee.getName());
+//        existigEmployee.setEmail(employee.getEmail());
+//        existigEmployee.setPhone(employee.getPhone());
+//        existigEmployee.setAddressList(employee.getAddressList());
+
+        List <Address> addressList = new ArrayList <>();
+        employee.getAddressList().stream().map(a -> addressList.add(a)).collect(Collectors.toList());
+        existigEmployee.setAddressList(addressList);
         existigEmployee.setName(employee.getName());
         existigEmployee.setEmail(employee.getEmail());
         existigEmployee.setPhone(employee.getPhone());
-        existigEmployee.setAddressList(employee.getAddressList());
-        return existigEmployee;
+
+        return employeeRepository.save(existigEmployee);
 
     }
 
@@ -65,6 +73,30 @@ public class EmployeeService {
 
     public List<Employee> sortEmployee(String field){
         return employeeRepository.findAll(Sort.by(Sort.Direction.ASC,field));
+    }
+
+    public List<Employee> filterEmployee(String name){
+        List<Employee> filteredEmployee = new ArrayList<>();
+        List <Employee> employees = employeeRepository.findAll();
+        for (Employee employee: employees
+             ) {
+
+            if (employee.getName().equalsIgnoreCase(name) || employee.getEmail().equalsIgnoreCase(name)){
+                filteredEmployee.add(employee);
+
+            }
+            for (Address address: employee.getAddressList()
+                 ) {
+                if(address.getCity().equalsIgnoreCase(name) ||
+                        address.getCountry().equalsIgnoreCase(name) ||
+                        address.getState().equalsIgnoreCase(name)){
+                    filteredEmployee.add(employee);
+                }
+            }
+
+        }
+
+        return filteredEmployee;
     }
 
 }

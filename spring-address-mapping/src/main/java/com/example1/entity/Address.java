@@ -14,6 +14,7 @@ import javax.persistence.*;
 @Table(name = "Address_Table")
 public class Address {
     @Id
+    @GeneratedValue
     private Integer id;
     private String street1;
     private String street2;
@@ -21,7 +22,7 @@ public class Address {
     private String state;
     private String country;
 
-    @ManyToOne
-    private Employee employee;
+//    @ManyToOne
+//    private Employee employee;
 
 }

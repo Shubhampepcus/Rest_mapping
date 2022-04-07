@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import com.example1.repository.AddressRepository;
 import com.example1.repository.EmployeeRepository;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,7 +24,7 @@ public class EmployeeController {
     private EmployeeService employeeService;
 
 
-    @PostMapping("/employees")
+    @PostMapping("/employees/")
     public Employee saveEmployee(@RequestBody Request request){
 
        // System.out.println(request.getEmployee().getAddressList());
@@ -64,11 +65,12 @@ public class EmployeeController {
         return employeeService.findById(id);
     }
 
-    @RequestMapping(value = "/employees/{id}",
-            produces = "application/json",
-            method=RequestMethod.PUT)
-    public Employee updateEmployee(Request request){
-        return employeeService.updateEmployee(request.getEmployee());
+
+    @PatchMapping("/employees/{id}")
+    public Employee updateEmployee(@RequestBody Request request,@PathVariable Integer id ){
+        Employee employee = request.getEmployee();
+        return employeeService.updateEmployee(id,request.getEmployee());
+
     }
 
     @DeleteMapping("/employees")
@@ -76,9 +78,26 @@ public class EmployeeController {
         return employeeService.deleteEmployee(id);
     }
 
-    @GetMapping("/employees/{field}")
+    @GetMapping("/employees/sorts/{field}")
     public List<Employee> sortEmployee(@PathVariable String field){
-        return employeeService.sortEmployee(field);
+        List<Employee> sortedEmployee = employeeService.sortEmployee(field);
+        return sortedEmployee;
+    }
+
+    @GetMapping("/employees/filters/{name}")
+    public List<Employee> filetrEmployee(@PathVariable String name){
+        List<Employee> filetredEmployee = employeeService.filterEmployee(name);
+        return filetredEmployee;
+    }
+
+    @GetMapping("/employees/filterByName/{name}")
+    public List<Employee> filterByName(@PathVariable String name){
+        return employeeRepository.findByname(name);
+    }
+
+    @GetMapping("/employees/filterByEmail/{email}")
+    public List<Employee> filterByEmail(@PathVariable String name){
+        return employeeRepository.findByemail(name);
     }
 
 
