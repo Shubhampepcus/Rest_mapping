@@ -12,6 +12,22 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public class Request {
+    public Employee getEmployee(){
+        return employee;
+    }
+
+    public void setEmployee(Employee employee){
+        this.employee = employee;
+    }
+
+    public Address getAddress(){
+        return address;
+    }
+
+    public void setAddress(Address address){
+        this.address = address;
+    }
+
     private Employee employee;
     private Address address;
 }
